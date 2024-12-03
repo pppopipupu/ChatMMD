@@ -92,7 +92,8 @@ namespace ChatMMD
                         chat.api_keys = list;                
                         this.Close();
                         Thread.Sleep(500);
-                       Process.Start("SabaViewer.exe");
+                      Process process  = Process.Start("SabaViewer.exe");
+                        chat.Saba = process;
                         chat.Show();
 
                         break;

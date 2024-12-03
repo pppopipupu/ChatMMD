@@ -49,7 +49,7 @@
                 </ItemsControl>
 
                 <!-- 文字区域 -->
-                <ui:TextBlock Grid.Row="2" Text="{Binding _Message}" TextWrapping="Wrap" Margin="2" />
+                <ui:TextBlock Grid.Row="2" Text="{Binding _Message}" TextWrapping="Wrap" Margin="2" Width="900"/>
             </Grid>
         </DataTemplate>
     </Window.Resources>
