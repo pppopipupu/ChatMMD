@@ -1,0 +1,52 @@
+﻿<ui:FluentWindow
+   x:Class="ChatMMD.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ChatMMD"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="720" Width="1200"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml">
+    <Grid>
+        <ui:TitleBar Title="Chat MMD" />
+        <ui:TextBlock TextWrapping="Wrap" Text="ChatMMD" Height="146" Width="604" FontSize="120" TextAlignment="Center" x:Name="Title_XD" RenderTransformOrigin="0.5,0.5" FontFamily="Impact" Margin="298,28,298,531">
+            <ui:TextBlock.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform />
+                    <SkewTransform AngleX="-31.901" />
+                    <RotateTransform />
+                    <TranslateTransform X="-16.777" />
+                </TransformGroup>
+            </ui:TextBlock.RenderTransform>
+            <ui:TextBlock.Effect>
+                <DropShadowEffect />
+            </ui:TextBlock.Effect>
+            <ui:TextBlock.Foreground>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FF000FFF" />
+                    <GradientStop Color="#FF00FFC8" Offset="1" />
+                    <GradientStop Color="#FF00DF26" />
+                </LinearGradientBrush>
+            </ui:TextBlock.Foreground>
+        </ui:TextBlock>
+        <ui:TextBlock x:Name="Tip" TextWrapping="Wrap" FontSize="24" Margin="10,262,797,402" FontFamily="Segoe UI Variable Text" FontWeight="Bold" RenderTransformOrigin="0.453,0.657">
+            <Run Text="输入你的API KEY（Gemini" />
+            <Run Text=" " />
+            <Run Text=")" />
+            <Run Text=" " />
+            <Run Text=":" />
+        </ui:TextBlock>
+        <ui:TextBox x:Name="API_KEY" HorizontalAlignment="Left" Margin="357,262,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="570" Cursor="IBeam" SelectionOpacity="-6" FontSize="24" PlaceholderText="API KEY........" RenderTransformOrigin="0.097,0.547" />
+        <ui:Button x:Name="Start" Content="开始！" Margin="518,590,0,0" VerticalAlignment="Top" Width="202" Height="82" Click="Button_Click" RenderTransformOrigin="0.466,1.59" />
+        <ui:TextBlock HorizontalAlignment="Left" Margin="10,322,0,0" TextWrapping="Wrap" Text="代理地址：" VerticalAlignment="Top" FontSize="24" />
+        <ui:TextBox x:Name="proxy" HorizontalAlignment="Left" Margin="135,322,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="217" FontSize="24" PlaceholderText="127.0.0.1......" />
+        <ui:Button Content="Clash" Margin="357,322,0,0" VerticalAlignment="Top" FontSize="24" Height="43" Width="97" Click="Button_Click_1" />
+        <ui:Button Content="添加到列表" Margin="932,230,0,0" VerticalAlignment="Top" Height="71" Width="224" FontSize="24" Click="Button_Click_2" />
+        <ui:TextBlock HorizontalAlignment="Left" Margin="10,357,0,0" TextWrapping="Wrap" Text="API KEY 列表" VerticalAlignment="Top" Height="40" Width="154" FontSize="24" />
+        <ui:ListView x:Name="API_LIST" Margin="10,389,797,10">
+        </ui:ListView>
+        <ui:Button Content="删除" Margin="408,407,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.208,-0.255" FontSize="24" Height="45" Width="117" IsCancel="True" Click="Button_Click_3" />
+        <Button Content="清除对话数据" Margin="863,502,0,0" VerticalAlignment="Top" Height="79" Width="181" Click="Button_Click_4"/>
+    </Grid>
+</ui:FluentWindow>
