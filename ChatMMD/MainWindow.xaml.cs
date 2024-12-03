@@ -89,10 +89,10 @@ namespace ChatMMD
                         sw.Write(@"{ ""Header"": { ""FileSignature"": ""Vocaloid Motion Data 0002"", ""ModelName"": ""MMD"" }, ""Motion"": { ""Count"": 0, ""Data"": [ ] }, ""Skin"": { ""Count"": 0, ""Data"": [ ] }, ""Camera"": { ""Count"": 0, ""Data"": [ ] }, ""Illumination"": { ""Count"": 0, ""Data"": [ ] }, ""SelfShadow"": { ""Count"": 0, ""Data"": [ ] }, ""IK"": { ""Count"": 0, ""Data"": [ ] }, ""Expansion"": { ""TargetID"": -1, ""StartFrame"": 0, ""Version"": 2, ""FileType"": ""VMD"", ""CoordinateSystem"": ""LeftHand"" } }");
                         sw.Close();
                         Chat chat = new Chat();
-                        chat.api_keys = list;
-                        App.Current.MainWindow = chat;
+                        chat.api_keys = list;                
                         this.Close();
-                        Process.Start("SabaViewer.exe");
+                        Thread.Sleep(500);
+                       Process.Start("SabaViewer.exe");
                         chat.Show();
 
                         break;
@@ -102,6 +102,7 @@ namespace ChatMMD
                 {
                     if (i == list.Count - 1)
                     {
+                   
                         Tip.Text = "失败，请检查网络环境和api key";
                         isLoading = false;
                     }

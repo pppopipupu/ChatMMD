@@ -195,7 +195,7 @@ namespace ChatMMD
                     }
                     else
                     {
-                        MessageBox.Show(ex.Message);
+                        MessageBox.Show(ex.ToString());
                     }
                 }
             }
@@ -205,7 +205,6 @@ namespace ChatMMD
         {
             if (sender is Button button && button.Tag is string audioPath)
             {
-                // 获取 MediaElement
                 var parent = button.Parent as StackPanel;
                 if (parent != null)
                 {
