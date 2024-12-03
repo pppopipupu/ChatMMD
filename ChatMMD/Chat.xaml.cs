@@ -38,13 +38,11 @@ namespace ChatMMD
             InitializeComponent();
             DataContext = this;
             Closed += Chat_Closed;
-      
-                if (File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\ChatMMD\chat.json"))
-                {
-                    History = System.Text.Json.JsonSerializer.Deserialize<List<ContentResponse>>(File.ReadAllText(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\ChatMMD\chat.json"));
-                }
-            
-      
+
+            if (File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\ChatMMD\chat.json"))
+            {
+                History = System.Text.Json.JsonSerializer.Deserialize<List<ContentResponse>>(File.ReadAllText(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\ChatMMD\chat.json"));
+            }
         }
 
         private void Chat_Closed(object? sender, EventArgs e)
@@ -175,7 +173,6 @@ namespace ChatMMD
                     var response = await chat.SendMessage(parts);
                     if (response.Text != null)
                     {
-                        MessageBox.Show($" {response.Text}");
                         if (!Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"/ChatMMD/"))
                         {
                             Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"/ChatMMD/");
@@ -192,8 +189,14 @@ namespace ChatMMD
                 }
                 catch (Exception ex)
                 {
-                   
-                    continue;
+                    if (i < api_keys.Count - 1)
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        MessageBox.Show(ex.Message);
+                    }
                 }
             }
         }

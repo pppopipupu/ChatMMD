@@ -47,6 +47,6 @@
         <ui:ListView x:Name="API_LIST" Margin="10,389,797,10">
         </ui:ListView>
         <ui:Button Content="删除" Margin="408,407,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.208,-0.255" FontSize="24" Height="45" Width="117" IsCancel="True" Click="Button_Click_3" />
-        <Button Content="清除对话数据" Margin="863,502,0,0" VerticalAlignment="Top" Height="79" Width="181" Click="Button_Click_4"/>
+        <Button Content="清除对话数据" Margin="863,502,0,0" VerticalAlignment="Top" Height="79" Width="181" Click="Button_Click_4" />
     </Grid>
 </ui:FluentWindow>

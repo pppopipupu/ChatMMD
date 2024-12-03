@@ -52,7 +52,7 @@ namespace ChatMMD
         {
             if (isLoading)
                 return;
-   
+
             isLoading = true;
             List<string> list = new List<string>();
             foreach (object s in API_LIST.Items)
@@ -65,7 +65,7 @@ namespace ChatMMD
                 return;
             }
             Tip.Text = "测试api中";
-        
+
             for (int i = 0; i < list.Count; i++)
             {
                 try
@@ -94,7 +94,6 @@ namespace ChatMMD
                         this.Close();
                         Process.Start("SabaViewer.exe");
                         chat.Show();
-           
 
                         break;
                     }
@@ -105,7 +104,6 @@ namespace ChatMMD
                     {
                         Tip.Text = "失败，请检查网络环境和api key";
                         isLoading = false;
-                 
                     }
                     else
                     {
