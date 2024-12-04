@@ -92,7 +92,7 @@ namespace ChatMMD
                         chat.api_keys = list;                
                         this.Close();
                         Thread.Sleep(500);
-                      Process process  = Process.Start("SabaViewer.exe");
+                        Process process = Process.Start("SabaViewer.exe");
                         chat.Saba = process;
                         chat.Show();
 
@@ -103,7 +103,7 @@ namespace ChatMMD
                 {
                     if (i == list.Count - 1)
                     {
-                   
+                     
                         Tip.Text = "失败，请检查网络环境和api key";
                         isLoading = false;
                     }

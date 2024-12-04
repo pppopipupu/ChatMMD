@@ -53,7 +53,24 @@ namespace ChatMMD
                 Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"/ChatMMD/");
             }
             StreamWriter sw = File.CreateText(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\ChatMMD\chat.json");
-            sw.Write(System.Text.Json.JsonSerializer.Serialize(History));
+            JArray ja = JArray.Parse(System.Text.Json.JsonSerializer.Serialize(History));
+
+            JArray modifiedJa = new JArray();
+
+            foreach (JObject item in ja)
+            {
+                JArray modifiedParts = new JArray();
+                foreach (JObject part in item["Parts"])
+                {
+                    part["InlineData"] = null;
+                    modifiedParts.Add(part);
+                }
+
+                JObject modifiedItem = new JObject(item);
+                modifiedItem["Parts"] = modifiedParts;
+                modifiedJa.Add(modifiedItem);
+            }
+            sw.Write(modifiedJa.ToString());
             sw.Close();
             Saba.Kill();
             Environment.Exit(0);
@@ -150,23 +167,24 @@ namespace ChatMMD
             foreach (var item in AudioView.Items) { audios.Add((string)item); }
             foreach (var item in ImageView.Items) { images.Add((string)item); }
             Messages.Add(new Message() { _Message = "User:" + TextPrompt.Text, Images = images, Audios = audios });
+
             for (int i = 0; i < api_keys.Count; i++)
             {
                 try
                 {
                     var googleAI = new GoogleAI(apiKey: api_keys[i].ToString());
-                    
-                    var model = googleAI.GenerativeModel(model: Model.Gemini15Flash002, systemInstruction: new Content("你将扮演一个MMD模型，每次输出都必须包含response部分和vmd动作部分，response是你说的话，vmd是你做出的动作，每次回答你都会对对方说的话做出不同的的动作,vmd动作中所有骨骼名的英文字母和阿拉伯数字为全角,并使用json编写vmd动作，请尽量延长你的动作并使动作符合你说的话,骨骼名均为标准MMD日文骨骼。你不应使用不在骨骼列表里的骨骼，且至少创建两个相同骨骼的关键帧以使骨骼运动，操控腿时移动右足ＩＫ/左足ＩＫ，因为IK意为Inverse Kinematics（反向运动），其他IK骨也是这么使用的,骨骼列表说明如下：" +
+
+                    var model = googleAI.GenerativeModel(model: Model.Gemini15Flash002, systemInstruction: new Content("你将扮演一个MMD模型，每次输出都必须包含response部分和vmd动作部分，response是你说的话，vmd是你做出的动作，所以你的最终输出json格式应为{response:\"你说的话\",vmd:\"动作json\"},每次回答你都会对对方说的话做出不同的的动作,vmd动作中所有骨骼名的英文字母和阿拉伯数字为全角,并使用json编写vmd动作，请尽量延长你的动作并使动作符合你说的话,骨骼名均为标准MMD日文骨骼。你不应使用不在骨骼列表里的骨骼，且至少创建两个相同骨骼的关键帧以使骨骼运动，操控腿时移动右足ＩＫ/左足ＩＫ，因为IK意为Inverse Kinematics（反向运动），其他IK骨也是这么使用的,骨骼列表说明如下：" +
                         " センター  center 中心骨\r\n\r\n上半身 用于整个模型中控制上半身的骨骼\r\n\r\n首 脖子\r\n\r\n頭 头\r\n\r\n両目 同时控制左右眼，使它们同时动的，是左目/右目的付与亲\r\n\r\n左目 左眼\r\n\r\n右目 右眼\r\n\r\n下半身 用于整个模型中控制下半身的骨骼\r\n\r\n右肩/左肩 肩膀\r\n\r\n右腕/左腕 手臂\r\n\r\n右ひじ/左ひじ  手小臂，也就是肘\r\n\r\n右手首/左手首 手掌\r\n\r\n右親指１、右親指２/左親指１、左親指２ 拇指，数字为全角数字\r\n\r\n右人指１、右人指２、右人指３/左人指１、左人指２、左人指３ 食指，数字为全角数字\r\n\r\n右中指１、右中指２、右中指３/左中指１、左中指２、左中指３ 中指，数字为全角数字\r\n\r\n右薬指１、右薬指２、右薬指３/左薬指１、左薬指２、左薬指３ 无名指，数字为全角数字\r\n\r\n右小指１、右小指２、右小指３/左小指１、左小指２、左小指３ 小指，数字为全角数字\r\n\r\n右足/左足 大腿\r\n\r\n右ひざ/左ひざ 膝盖，小腿\r\n\r\n右足首/左足首 脚掌，指向脚尖骨\r\n\r\n右つま先/左つま先 脚尖，但是本身是个隐藏骨，且上面没有权重\r\n\r\n右足ＩＫ/左足ＩＫ 影响腿的骨骼\r\n\r\n右つま先ＩＫ/左つま先ＩＫ 影响脚掌的骨骼\r\n\r\n全ての親 用于模型整体移动\r\n\r\nグルーブ groove，跟center骨用处一样，可以当重心来用\r\n\r\n上半身2 亲骨是上半身，上半身的骨中偏上的一根\r\n\r\n右腕捩/左腕捩 控制手大臂绕臂旋转\r\n\r\n右ひじ捩/左ひじ捩 控制小臂绕臂旋转\r\n\r\n右肩P/左肩P 用来耸肩的骨骼\r\n\r\n右肩C/左肩C 用来协助耸肩的骨骼\r\n\r\n右親指０/左親指０ 特殊动作可能会用到的大拇指的骨\r\n\r\n腰 就是腰\r\n\r\n右足IK親/左足IK親 一般在左/右足首骨下面，一个单纯的移动骨骼，亲骨是全亲骨，作为足IK的亲骨骼\r\n\r\n腰キャンセル右/腰キャンセル左 腰取消骨，用于保持脚部位置不变的时候外翻膝盖用的\r\n\r\n右足D/左足D 同足，用于脱离足ik限制进行踢脚使用的骨\r\n\r\n右ひざD/左ひざD 同ひざ，用于脱离足ik限制进行踢脚使用的骨\r\n\r\n右足首D/左足首D 同足首，用于脱离足ik限制进行踢脚使用的骨\r\n\r\n右足先EX/左足先EX 前脚掌(骨骼说明结束）"
                         + "json动画格式如下：{\r\n  \"Header\": {\r\n      \"FileSignature\": \"Vocaloid Motion Data 0002\",\r\n      \"ModelName\": \"Model\"\r\n  },\r\n  \"Motion\": {\r\n    \"Count\": 5,\r\n    \"Data\": [\r\n        {\r\n        \"FrameNo\": 0,\r\n        \"Name\": \"左ひじ\",\r\n        \"Location\": [0, 0, 0],\r\n        \"Rotation\": {\r\n          \"Quaternion\": [1, 0, 0, 0],\r\n          \"Euler\": [-0, 0, 0]\r\n        },\r\n        \"Interpolation\": {\r\n          \"X\": {\"start\":[20, 20], \"end\":[107, 107]},\r\n          \"Y\": {\"start\":[20, 20], \"end\":[107, 107]},\r\n          \"Z\": {\"start\":[20, 20], \"end\":[107, 107]},\r\n          \"Rotation\": {\"start\":[20, 20], \"end\":[107, 107]}\r\n        }\r\n      },\r\n        {\r\n        \"FrameNo\": 19,\r\n        \"Name\": \"左ひじ\",\r\n        \"Location\": [0, 0, 0],\r\n        \"Rotation\": {\r\n          \"Quaternion\": [-0.55723965, -0.7626573, 0.21307592, 0.24987298],\r\n          \"Euler\": [8.3, 37.6, 104.9]\r\n        },\r\n        \"Interpolation\": {\r\n          \"X\": {\"start\":[20, 20], \"end\":[107, 107]},\r\n          \"Y\": {\"start\":[20, 20], \"end\":[107, 107]},\r\n          \"Z\": {\"start\":[20, 20], \"end\":[107, 107]},\r\n          \"Rotation\": {\"start\":[42, 0], \"end\":[85, 127]}\r\n        }\r\n      },\r\n        {\r\n        \"FrameNo\": 0,\r\n        \"Name\": \"右足ＩＫ\",\r\n        \"Location\": [0, 0, 0],\r\n        \"Rotation\": {\r\n          \"Quaternion\": [1, 0, 0, 0],\r\n          \"Euler\": [-0, 0, 0]\r\n        },\r\n        \"Interpolation\": {\r\n          \"X\": {\"start\":[20, 20], \"end\":[107, 107]},\r\n          \"Y\": {\"start\":[20, 20], \"end\":[107, 107]},\r\n          \"Z\": {\"start\":[20, 20], \"end\":[107, 107]},\r\n          \"Rotation\": {\"start\":[20, 20], \"end\":[107, 107]}\r\n        }\r\n      },\r\n        {\r\n        \"FrameNo\": 3,\r\n        \"Name\": \"右足ＩＫ\",\r\n        \"Location\": [0, 0, 0],\r\n        \"Rotation\": {\r\n          \"Quaternion\": [1, 0, 0, 0],\r\n          \"Euler\": [-0, 0, 0]\r\n        },\r\n        \"Interpolation\": {\r\n          \"X\": {\"start\":[20, 20], \"end\":[107, 107]},\r\n          \"Y\": {\"start\":[20, 20], \"end\":[107, 107]},\r\n          \"Z\": {\"start\":[20, 20], \"end\":[107, 107]},\r\n          \"Rotation\": {\"start\":[20, 20], \"end\":[107, 107]}\r\n        }\r\n      },\r\n        {\r\n        \"FrameNo\": 14,\r\n        \"Name\": \"右足ＩＫ\",\r\n        \"Location\": [-18.56, 28.23, -23.07],\r\n        \"Rotation\": {\r\n          \"Quaternion\": [1, 0, 0, 0],\r\n          \"Euler\": [-0, 0, 0]\r\n        },\r\n        \"Interpolation\": {\r\n          \"X\": {\"start\":[42, 0], \"end\":[85, 127]},\r\n          \"Y\": {\"start\":[42, 0], \"end\":[85, 127]},\r\n          \"Z\": {\"start\":[42, 0], \"end\":[85, 127]},\r\n          \"Rotation\": {\"start\":[20, 20], \"end\":[107, 107]}\r\n        }\r\n      }\r\n    ]\r\n  },\r\n  \"Skin\": {\r\n    \"Count\": 0,\r\n    \"Data\": [\r\n    ]\r\n  },\r\n  \"Camera\": {\r\n    \"Count\": 0,\r\n    \"Data\": [\r\n    ]\r\n  },\r\n  \"Illumination\": {\r\n    \"Count\": 0,\r\n    \"Data\": [\r\n    ]\r\n  },\r\n  \"SelfShadow\": {\r\n    \"Count\": 0,\r\n    \"Data\": [\r\n    ]\r\n  },\r\n  \"IK\": {\r\n    \"Count\": 0,\r\n    \"Data\": [\r\n    ]\r\n  },\r\n  \"Expansion\": {\r\n      \"TargetID\": -1,\r\n      \"StartFrame\": 0,\r\n      \"Version\": 2,\r\n      \"FileType\": \"VMD\",\r\n      \"CoordinateSystem\": \"LeftHand\"\r\n  }\r\n}(json动画示例结束）" + "这是一个让角色踢腿并抬起左手的动画，你的动画必须符合这个格式"));
                     model.UseJsonMode = true;
-                    
+
                     var chat = model.StartChat(History, generationConfig: new GenerationConfig()
                     {
                         Temperature = (float)Temperature.Value,
                         TopP = (float)Top_P.Value,
                         EnableEnhancedCivicAnswers = false,
-                       
+
                         ResponseMimeType = "application/json"
                     });
                     List<Part> parts = new List<Part>();
@@ -176,6 +194,7 @@ namespace ChatMMD
                     }
 
                     parts.Add(new Part() { Text = TextPrompt.Text });
+
                     var response = await chat.SendMessage(parts);
                     if (response.Text != null)
                     {
@@ -190,6 +209,9 @@ namespace ChatMMD
                         Messages.Add(new Message() { _Message = "Model:" + jO["response"].ToString() });
                         isLoading = false;
                         SendMessage.Content = "发送";
+                        TextPrompt.Text = string.Empty;
+                        ImageView.Items.Clear();
+                        AudioView.Items.Clear();
                         break;
                     }
                 }
@@ -197,10 +219,12 @@ namespace ChatMMD
                 {
                     if (i < api_keys.Count - 1)
                     {
+                     
                         continue;
                     }
                     else
                     {
+                     
                         MessageBox.Show(ex.ToString());
                     }
                 }
