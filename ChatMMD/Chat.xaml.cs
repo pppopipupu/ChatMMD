@@ -205,16 +205,24 @@ namespace ChatMMD
                             Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"/ChatMMD/");
                         }
                         StreamWriter sw = File.CreateText(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\ChatMMD\motion.json");
-                        JObject jO = JObject.Parse(response.Text);
-                        sw.Write(jO["vmd"].ToString());
-                        sw.Close();
-                        Messages.Add(new Message() { _Message = "Model:" + jO["response"].ToString() });
-                        isLoading = false;
-                        SendMessage.Content = "发送";
-                        TextPrompt.Text = string.Empty;
-                        ImageView.Items.Clear();
-                        AudioView.Items.Clear();
-                        break;
+                        try
+                        {
+                            JObject jO = JObject.Parse(response.Text);
+                            sw.Write(jO["vmd"].ToString());
+                            sw.Close();
+                            Messages.Add(new Message() { _Message = "Model:" + jO["response"].ToString() });
+                            isLoading = false;
+                            SendMessage.Content = "发送";
+                            TextPrompt.Text = string.Empty;
+                            ImageView.Items.Clear();
+                            AudioView.Items.Clear();
+                            break;
+                        }
+                        catch (Exception ex) {
+                            SendMessage.Content = "模型抽风了，再发一次试试吧....";
+                            break;
+                        }
+                
                     }
                 }
                 catch (Exception ex)
