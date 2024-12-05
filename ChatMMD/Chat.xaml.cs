@@ -219,6 +219,7 @@ namespace ChatMMD
                             break;
                         }
                         catch (Exception ex) {
+                            isLoading = false;
                             SendMessage.Content = "模型抽风了，再发一次试试吧....";
                             break;
                         }
@@ -234,7 +235,7 @@ namespace ChatMMD
                     }
                     else
                     {
-                     
+                       isLoading = false;
                         MessageBox.Show(ex.ToString());
                     }
                 }
